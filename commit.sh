@@ -1,6 +1,6 @@
-git add --all;
-git commit -m "$"
-token_id="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"
+echo git add --all;
+echo git commit -m $1
+token_id="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"
 username="brendajfa"
 repo="KaggleExercices"
-git push https://$token_id@github.com/$username/$repo.git
+echo git push https://$token_id@github.com/$username/$repo.git
