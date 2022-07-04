@@ -2,6 +2,19 @@
 #from learntools.python.ex7 import *
 #print('Setup complete.')
 
+def hand_total(hand):
+    sum_hand = sum([int(hand[index]) for index in range(len(hand)) if hand[index].isdigit()]) + (hand.count('J') + hand.count('Q') +hand.count('K') )*10
+    a_hand = hand.count('A')
+    final_hand = sum_hand
+    for pre_index in range(hand+1):
+        addition = pre_index*10+a_hand
+        if addition +sum_hand < 21 or pre_index == 0:
+            final_hand = addition+sum_hand
+        else:
+            break
+    
+    return final_hand
+
 
 def blackjack_hand_greater_than(hand_1, hand_2):
     """
@@ -31,37 +44,9 @@ def blackjack_hand_greater_than(hand_1, hand_2):
 
     print("Cards of hand_1: {}\nCards of hand_2: {}".format(hand_1, hand_2))
 
-    max_range = max(len(hand_1),len(hand_1))
-    sum_hand_1 = sum([int(hand_1[index]) for index in range(len(hand_1)) if hand_1[index].isdigit()]) + (hand_1.count('J') + hand_1.count('Q') +hand_1.count('K') )*10
-    sum_hand_2 = sum([int(hand_2[index]) for index in range(len(hand_2)) if hand_2[index].isdigit()]) + (hand_2.count('J') + hand_2.count('Q') +hand_2.count('K') )*10
-    a_hand_1 = hand_1.count('A')
-    a_hand_2 = hand_2.count('A')
-    
-#    print("Number of 'A' in hand_1: {}\nNumber of 'A' in hand_2: {}".format(a_hand_1, a_hand_2))
-
-    final_hand_1 = sum_hand_1
-    for pre_index_1 in range(a_hand_1+1):
-        addition = pre_index_1*10+a_hand_1
-#        print("pre_index_1: {} and addition: {}".format(pre_index_1,addition))
-        if addition+sum_hand_1 < 21 or pre_index_1 == 0:
-            final_hand_1 = addition+sum_hand_1
-        else:
-            break
-
-    final_hand_2 = sum_hand_2
-    for pre_index_2 in range(a_hand_2+1):
-        addition = pre_index_2*10+a_hand_2
-        if addition+sum_hand_1 < 21 or pre_index_2 == 0:
-            final_hand_2 = addition+sum_hand_2
-        else:
-            break
-
-    print("Sum of cards of hand_1: {}\nSum of cards of hand_2: {}".format(final_hand_1, final_hand_2))
-    result = False
-    if final_hand_1 <= 21:
-        if final_hand_1 > final_hand_2 or final_hand_2 > 21:
-            result = True
-    return result
+    total_1 = hand_total(hand_1)
+    total_2 = hand_total(hand_2)
+    return total_1 <= 21 and (total_1 > total_2 or total_2 > 21)
 
 
 print("Wrong") if blackjack_hand_greater_than(['K'], ['3', '4']) == "False" else print("Right")
@@ -69,3 +54,36 @@ print("Wrong") if blackjack_hand_greater_than(['A','10','10','A'], ['10']) == "T
 print("Wrong") if blackjack_hand_greater_than(['A', 'A', '2'], ['3']) == "True" else print("Right")
 # Check your answer
 #q3.check()
+
+
+# SOLUTION
+# def hand_total(hand):
+#     """Helper function to calculate the total points of a blackjack hand.
+#     """
+#     total = 0
+#     # Count the number of aces and deal with how to apply them at the end.
+#     aces = 0
+#     for card in hand:
+#         if card in ['J', 'Q', 'K']:
+#             total += 10
+#         elif card == 'A':
+#             aces += 1
+#         else:
+#             # Convert number cards (e.g. '7') to ints
+#             total += int(card)
+#     # At this point, total is the sum of this hand's cards *not counting aces*.
+
+#     # Add aces, counting them as 1 for now. This is the smallest total we can make from this hand
+#     total += aces
+#     # "Upgrade" aces from 1 to 11 as long as it helps us get closer to 21
+#     # without busting
+#     while total + 10 <= 21 and aces > 0:
+#         # Upgrade an ace from 1 to 11
+#         total += 10
+#         aces -= 1
+#     return total
+
+# def blackjack_hand_greater_than(hand_1, hand_2):
+#     total_1 = hand_total(hand_1)
+#     total_2 = hand_total(hand_2)
+#     return total_1 <= 21 and (total_1 > total_2 or total_2 > 21)
